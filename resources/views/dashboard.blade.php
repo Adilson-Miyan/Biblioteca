@@ -13,7 +13,7 @@
                         <h1 class="mb-8 text-4xl md:text-5xl font-serif font-bold text-[#cba77d] leading-tight tracking-wide">
                             Bem Vindo a Biblioteca<br>Digital
                         </h1>
-                        <a href="{{ route('livros.index') }}" class="inline-flex items-center justify-center px-8 py-2.5 bg-[#ad8557] text-[#261912] font-semibold rounded-full hover:bg-[#cba77d] transition-colors text-sm shadow-md">
+                        <a href="{{ route('catalogo') }}" class="inline-flex items-center justify-center px-8 py-2.5 bg-[#ad8557] text-[#261912] font-semibold rounded-full hover:bg-[#cba77d] transition-colors text-sm shadow-md">
                             Explorar Catálogo <span class="ml-2 font-normal">&rarr;</span>
                         </a>
                     </div>
@@ -61,7 +61,7 @@
                             <svg class="w-7 h-7 mr-3 text-[#b58f5c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
                             Últimas Adições
                         </h2>
-                        <a href="{{ route('livros.index') }}" class="btn btn-sm btn-ghost hover:bg-[#3e2b1e] text-[#b58f5c] border border-[#b58f5c] hover:border-[#b58f5c] rounded-full px-6">
+                        <a href="{{ route('catalogo') }}" class="btn btn-sm btn-ghost hover:bg-[#3e2b1e] text-[#b58f5c] border border-[#b58f5c] hover:border-[#b58f5c] rounded-full px-6">
                             Ver todos <span class="ml-2">&rarr;</span>
                         </a>
                     </div>
@@ -109,11 +109,13 @@
                             </div>
                             <h3 class="text-3xl font-bold text-[#e8c39e] mb-3">O acervo está vazio</h3>
                             <p class="text-lg text-gray-400 max-w-md mx-auto leading-relaxed">Ainda não existem livros registados no sistema. Comece a criar a sua biblioteca digital hoje mesmo.</p>
-                            <div class="mt-8">
-                                <a href="{{ route('livros.index') }}" class="btn bg-[#b58f5c] hover:bg-[#d4a86f] text-[#3e2b1e] border-none shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 px-8 py-3 rounded-full font-bold">
-                                    Adicionar o primeiro livro
-                                </a>
-                            </div>
+                            @if(Auth::user()->isAdmin())
+                                <div class="mt-8">
+                                    <a href="{{ route('livros.index') }}" class="btn bg-[#b58f5c] hover:bg-[#d4a86f] text-[#3e2b1e] border-none shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 px-8 py-3 rounded-full font-bold">
+                                        Adicionar o primeiro livro
+                                    </a>
+                                </div>
+                            @endif
                         </div>
                     @endif
                 </div>

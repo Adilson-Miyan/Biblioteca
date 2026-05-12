@@ -41,7 +41,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 text-left">
                     <div class="p-8 bg-[#2d2019] rounded-2xl border border-[#3e2b1e] shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
                         <h2 class="text-2xl font-serif text-[#cba77d] mb-3">Catálogo de Obras</h2>
-                        <p class="text-gray-400 leading-relaxed">Explore centenas de livros encriptados num sistema de bases de dados imutável. Navegue por autores ou por obras publicadas pelas maiores editoras de Portugal.</p>
+                        <p class="text-gray-400 leading-relaxed mb-4">Explore centenas de livros encriptados num sistema de bases de dados imutável. Navegue por autores ou por obras publicadas pelas maiores editoras de Portugal.</p>
+                        <a href="{{ route('catalogo') }}" class="inline-block mt-2 px-6 py-2 border border-[#b58f5c] text-[#b58f5c] font-bold rounded-lg hover:bg-[#b58f5c] hover:text-[#1c1816] transition-colors">Aceder ao Catálogo</a>
                     </div>
                     <div class="p-8 bg-[#2d2019] rounded-2xl border border-[#3e2b1e] shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
                         <h2 class="text-2xl font-serif text-[#cba77d] mb-3">Autores Míticos</h2>
