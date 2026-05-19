@@ -26,6 +26,7 @@ Route::middleware([
     Route::get('/editoras', \App\Livewire\Editoras\Index::class)->name('editoras.index');
     Route::get('/autores', \App\Livewire\Autores\Index::class)->name('autores.index');
     Route::get('/livros', \App\Livewire\Livros\Index::class)->name('livros.index');
+    Route::get('/livros/importar', \App\Livewire\Livros\Importar::class)->name('livros.importar');
     Route::get('/cidadaos', \App\Livewire\Cidadaos\Index::class)->name('cidadaos.index');
     Route::get('/requisicoes', \App\Livewire\Requisicoes\Index::class)->name('requisicoes.index');
 });
