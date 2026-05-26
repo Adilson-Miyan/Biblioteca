@@ -72,10 +72,49 @@ class Catalogo extends Component
         session()->flash('success', 'Requisição efetuada com sucesso!');
     }
 
+    public $livrosRelacionados = [];
+
     public function openDetalhe($livroId)
     {
-        $this->livroSelecionado = Livro::with('autores', 'editora', 'requisicaos.user')->findOrFail($livroId);
+        $this->livroSelecionado = Livro::with([
+            'autores', 
+            'editora', 
+            'requisicaos.user', 
+            'requisicaos.review' => function($q) {
+                $q->where('status', 'ativo');
+            }
+        ])->findOrFail($livroId);
+
+        // Load related books using the new service (we will create it next)
+        $relationService = new \App\Services\LivroRelationService();
+        $this->livrosRelacionados = $relationService->getRelatedBooks($this->livroSelecionado);
+
         $this->showModal = true;
+    }
+
+    public function requestAlert($livroId)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+        
+        $exists = \App\Models\LivroAlert::where('user_id', $user->id)
+            ->where('livro_id', $livroId)
+            ->where('is_notified', false)
+            ->exists();
+
+        if (!$exists) {
+            \App\Models\LivroAlert::create([
+                'user_id' => $user->id,
+                'livro_id' => $livroId,
+                'is_notified' => false,
+            ]);
+            session()->flash('success', 'Alerta criado com sucesso. Será notificado quando o livro estiver disponível.');
+        } else {
+            session()->flash('error', 'Já tem um alerta pendente para este livro.');
+        }
     }
 
     public function render()

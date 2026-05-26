@@ -46,17 +46,77 @@ class Index extends Component
             'status' => 'entregue',
         ]);
 
+        // Process alerts
+        $livro = $requisicao->livro;
+        if ($livro->isDisponivel()) {
+            $alerts = \App\Models\LivroAlert::with('user')->where('livro_id', $livro->id)->where('is_notified', false)->get();
+            foreach ($alerts as $alert) {
+                \Illuminate\Support\Facades\Mail::to($alert->user->email)->send(new \App\Mail\LivroDisponivelMail($livro));
+                $alert->update(['is_notified' => true]);
+            }
+        }
+
         $this->confirmingRececao = false;
         $this->requisicaoIdToConfirm = null;
         
         session()->flash('success', 'Receção confirmada com sucesso.');
     }
 
+    public $reviewing = false;
+    public $requisicaoIdToReview = null;
+    public $reviewRating = 5;
+    public $reviewComment = '';
+
+    public function openReview($id)
+    {
+        $this->requisicaoIdToReview = $id;
+        $this->reviewRating = 5;
+        $this->reviewComment = '';
+        $this->reviewing = true;
+    }
+
+    public function submitReview()
+    {
+        $this->validate([
+            'reviewRating' => 'required|integer|min:1|max:5',
+            'reviewComment' => 'required|string|max:1000',
+        ]);
+
+        $requisicao = Requisicao::findOrFail($this->requisicaoIdToReview);
+
+        if ($requisicao->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($requisicao->review) {
+            session()->flash('error', 'Já existe uma avaliação para esta requisição.');
+            $this->reviewing = false;
+            return;
+        }
+
+        $review = $requisicao->review()->create([
+            'rating' => $this->reviewRating,
+            'comment' => $this->reviewComment,
+            'status' => 'suspenso',
+        ]);
+
+        $review->load('requisicao.user', 'requisicao.livro');
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            \Illuminate\Support\Facades\Mail::to($admin->email)->send(new \App\Mail\ReviewCreatedMail($review));
+        }
+
+        $this->reviewing = false;
+        $this->requisicaoIdToReview = null;
+        
+        session()->flash('success', 'Avaliação submetida com sucesso! Encontra-se pendente de aprovação.');
+    }
+
     public function render()
     {
         $user = Auth::user();
         
-        $query = Requisicao::with('user', 'livro')
+        $query = Requisicao::with('user', 'livro', 'review')
             ->where(function($q) {
                 $q->whereHas('user', function($q2) {
                     $q2->where('name', 'like', '%' . $this->search . '%');

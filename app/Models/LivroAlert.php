@@ -4,16 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Requisicao extends Model
+class LivroAlert extends Model
 {
     protected $fillable = [
         'user_id',
         'livro_id',
-        'data_requisicao',
-        'data_fim_prevista',
-        'data_rececao',
-        'dias_decorrentes',
-        'status',
+        'is_notified',
     ];
 
     public function user()
@@ -24,10 +20,5 @@ class Requisicao extends Model
     public function livro()
     {
         return $this->belongsTo(Livro::class);
-    }
-
-    public function review()
-    {
-        return $this->hasOne(Review::class);
     }
 }

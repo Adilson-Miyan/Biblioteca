@@ -114,6 +114,9 @@
                                 <button disabled class="w-full bg-red-900/50 text-red-300 border border-red-500/50 py-3 rounded-xl font-bold tracking-wide uppercase text-sm cursor-not-allowed">
                                     Indisponível
                                 </button>
+                                <button wire:click="requestAlert({{ $livroSelecionado->id }})" class="w-full mt-2 bg-[#1c1816] hover:bg-[#2d2019] text-[#b58f5c] border border-[#3e2b1e] py-2 rounded-xl text-xs font-semibold tracking-wide transition-colors">
+                                    Notificar-me quando disponível
+                                </button>
                             @endif
                         @else
                             <a href="{{ route('login') }}" class="block text-center w-full bg-[#1c1816] border border-[#3e2b1e] hover:border-[#b58f5c] text-white py-3 rounded-xl tracking-wide transition-colors uppercase text-sm font-bold">
@@ -203,8 +206,63 @@
                             </div>
                         @endif
                     </div>
+
+                    <!-- Avaliações -->
+                    <div class="mt-8">
+                        <h3 class="text-sm font-bold text-[#cba77d] uppercase tracking-wide mb-3 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                            Avaliações
+                        </h3>
+                        
+                        @php
+                            $reviews = $livroSelecionado->requisicaos->pluck('review')->filter();
+                        @endphp
+
+                        @if($reviews->isEmpty())
+                            <p class="text-gray-500 text-sm italic bg-[#1c1816] p-4 rounded-xl border border-[#3e2b1e] text-center">
+                                Este livro ainda não possui avaliações.
+                            </p>
+                        @else
+                            <div class="space-y-4">
+                                @foreach($reviews as $review)
+                                    <div class="bg-[#1c1816] border border-[#3e2b1e] p-4 rounded-xl relative">
+                                        <div class="absolute top-4 right-4 flex text-yellow-400 text-xs font-bold items-center">
+                                            {{ $review->rating }} <svg class="w-3 h-3 ml-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                                        </div>
+                                        <p class="text-sm font-semibold text-white mb-1">{{ $review->requisicao->user->name }}</p>
+                                        <p class="text-sm text-gray-400 italic">"{{ $review->comment }}"</p>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
+
+            <!-- Livros Relacionados -->
+            @if(count($livrosRelacionados) > 0)
+                <div class="mt-8 border-t border-[#3e2b1e] pt-8">
+                    <h3 class="text-lg font-bold text-[#cba77d] uppercase tracking-wide mb-4">Livros Relacionados</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        @foreach($livrosRelacionados as $relacionado)
+                            <div class="bg-[#1c1816] border border-[#3e2b1e] rounded-xl overflow-hidden hover:border-[#b58f5c] transition-colors cursor-pointer flex flex-col h-full" wire:click="openDetalhe({{ $relacionado->id }})">
+                                <div class="h-32 overflow-hidden flex-shrink-0">
+                                    @if($relacionado->imagem_capa)
+                                        <img src="{{ Storage::url($relacionado->imagem_capa) }}" class="w-full h-full object-cover">
+                                    @else
+                                        <div class="w-full h-full bg-[#2d2019] flex items-center justify-center text-gray-500">
+                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="p-3 flex flex-col flex-grow">
+                                    <h4 class="text-xs font-bold text-white line-clamp-2" title="{{ $relacionado->nome }}">{{ $relacionado->nome }}</h4>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </x-slot>
 
         <x-slot name="footer">

@@ -29,4 +29,5 @@ Route::middleware([
     Route::get('/livros/importar', \App\Livewire\Livros\Importar::class)->name('livros.importar');
     Route::get('/cidadaos', \App\Livewire\Cidadaos\Index::class)->name('cidadaos.index');
     Route::get('/requisicoes', \App\Livewire\Requisicoes\Index::class)->name('requisicoes.index');
+    Route::get('/reviews', \App\Livewire\Reviews\Index::class)->name('reviews.index');
 });

@@ -32,8 +32,13 @@
                             </x-nav-link>
                         @endif
                         <x-nav-link href="{{ route('requisicoes.index') }}" :active="request()->routeIs('requisicoes.*')">
-                            Requisições
+                            {{ __('Requisições') }}
                         </x-nav-link>
+                        @if(Auth::user()->isAdmin())
+                            <x-nav-link href="{{ route('reviews.index') }}" :active="request()->routeIs('reviews.*')">
+                                {{ __('Avaliações') }}
+                            </x-nav-link>
+                        @endif
                     @endauth
                 </div>
             </div>
@@ -177,8 +182,14 @@
                     </x-responsive-nav-link>
                 @endif
                 <x-responsive-nav-link href="{{ route('requisicoes.index') }}" :active="request()->routeIs('requisicoes.*')">
-                    Requisições
+                    {{ __('Requisições') }}
                 </x-responsive-nav-link>
+
+                @if(Auth::user()->isAdmin())
+                    <x-responsive-nav-link href="{{ route('reviews.index') }}" :active="request()->routeIs('reviews.*')">
+                        {{ __('Avaliações') }}
+                    </x-responsive-nav-link>
+                @endif
             @endauth
         </div>
         @auth

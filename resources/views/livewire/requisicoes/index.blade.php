@@ -61,9 +61,7 @@
                                 <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Data Req.</th>
                                 <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Fim Previsto</th>
                                 <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider">Estado</th>
-                                @if(Auth::user()->isAdmin())
-                                    <th class="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider">Ações</th>
-                                @endif
+                                <th class="px-6 py-4 text-right text-xs font-bold uppercase tracking-wider">Ações</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-[#3e2b1e] bg-[#2d2019]">
@@ -99,15 +97,22 @@
                                             <span class="text-red-400 text-xs px-3 py-1 bg-red-900/30 rounded-full border border-red-700/50 font-bold uppercase tracking-wider">Atrasado</span>
                                         @endif
                                     </td>
-                                    @if(Auth::user()->isAdmin())
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        @if(Auth::user()->isAdmin())
                                             @if($req->status !== 'entregue')
                                                 <button wire:click="confirmRececao({{ $req->id }})" class="btn btn-sm btn-ghost text-green-400 hover:bg-[#1c1816]">Confirmar Receção</button>
                                             @else
                                                 <span class="text-gray-500 text-xs italic">{{ \Carbon\Carbon::parse($req->data_rececao)->format('d/m/Y') }} ({{ $req->dias_decorrentes }} dias)</span>
                                             @endif
-                                        </td>
-                                    @endif
+                                        @endif
+                                        @if(Auth::user()->isCidadao() && $req->status === 'entregue')
+                                            @if(!$req->review)
+                                                <button wire:click="openReview({{ $req->id }})" class="btn btn-sm btn-ghost text-blue-400 hover:bg-[#1c1816]">Deixar Avaliação</button>
+                                            @else
+                                                <span class="text-gray-500 text-xs italic">Avaliação: {{ ucfirst($req->review->status) }}</span>
+                                            @endif
+                                        @endif
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
@@ -147,6 +152,46 @@
 
                 <x-button class="ms-3 bg-green-600 hover:bg-green-700 border-none font-bold text-white" wire:click="markAsReceived" wire:loading.attr="disabled">
                     Confirmar Entrega
+                </x-button>
+            </x-slot>
+        </x-dialog-modal>
+
+        <x-dialog-modal wire:model.live="reviewing">
+            <x-slot name="title">
+                <span class="text-blue-400 font-bold text-xl">Deixar Avaliação</span>
+            </x-slot>
+
+            <x-slot name="content">
+                <div class="mt-4">
+                    <p class="text-gray-300 mb-4">Partilhe a sua opinião sobre o livro.</p>
+                    
+                    <div class="mb-4">
+                        <x-label for="reviewRating" value="Classificação (1 a 5)" class="text-gray-300 font-semibold" />
+                        <select id="reviewRating" wire:model="reviewRating" class="mt-2 block w-full bg-[#2d2019] border-[#3e2b1e] text-white focus:border-[#b58f5c] focus:ring-[#b58f5c] rounded-lg">
+                            <option value="5">5 - Excelente</option>
+                            <option value="4">4 - Muito Bom</option>
+                            <option value="3">3 - Bom</option>
+                            <option value="2">2 - Razoável</option>
+                            <option value="1">1 - Fraco</option>
+                        </select>
+                        <x-input-error for="reviewRating" class="mt-2 text-red-400" />
+                    </div>
+
+                    <div>
+                        <x-label for="reviewComment" value="Comentário" class="text-gray-300 font-semibold" />
+                        <textarea id="reviewComment" wire:model="reviewComment" rows="4" class="mt-2 block w-full bg-[#2d2019] border-[#3e2b1e] text-white focus:border-[#b58f5c] focus:ring-[#b58f5c] rounded-lg"></textarea>
+                        <x-input-error for="reviewComment" class="mt-2 text-red-400" />
+                    </div>
+                </div>
+            </x-slot>
+
+            <x-slot name="footer">
+                <x-secondary-button wire:click="$toggle('reviewing')" wire:loading.attr="disabled" class="bg-[#3e2b1e] text-white border-none hover:bg-[#2d2019]">
+                    Cancelar
+                </x-secondary-button>
+
+                <x-button class="ms-3 bg-blue-600 hover:bg-blue-700 border-none font-bold text-white" wire:click="submitReview" wire:loading.attr="disabled">
+                    Submeter Avaliação
                 </x-button>
             </x-slot>
         </x-dialog-modal>
