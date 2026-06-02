@@ -38,13 +38,17 @@
                             <x-nav-link href="{{ route('reviews.index') }}" :active="request()->routeIs('reviews.*')">
                                 {{ __('Avaliações') }}
                             </x-nav-link>
+                            <x-nav-link href="{{ route('admin.orders.index') }}" :active="request()->routeIs('admin.orders.*')">
+                                {{ __('Encomendas') }}
+                            </x-nav-link>
                         @endif
                     @endauth
                 </div>
             </div>
 
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div class="hidden sm:flex sm:items-center sm:ms-6 space-x-4">
                 @auth
+                    <livewire:cart-counter />
                     @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                         <div class="ms-3 relative">
                             <x-dropdown align="right" width="60">
@@ -189,7 +193,13 @@
                     <x-responsive-nav-link href="{{ route('reviews.index') }}" :active="request()->routeIs('reviews.*')">
                         {{ __('Avaliações') }}
                     </x-responsive-nav-link>
+                    <x-responsive-nav-link href="{{ route('admin.orders.index') }}" :active="request()->routeIs('admin.orders.*')">
+                        {{ __('Encomendas') }}
+                    </x-responsive-nav-link>
                 @endif
+                <x-responsive-nav-link href="{{ route('cart.index') }}" :active="request()->routeIs('cart.index')">
+                    {{ __('Carrinho de Compras') }}
+                </x-responsive-nav-link>
             @endauth
         </div>
         @auth

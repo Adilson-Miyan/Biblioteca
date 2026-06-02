@@ -30,4 +30,9 @@ Route::middleware([
     Route::get('/cidadaos', \App\Livewire\Cidadaos\Index::class)->name('cidadaos.index');
     Route::get('/requisicoes', \App\Livewire\Requisicoes\Index::class)->name('requisicoes.index');
     Route::get('/reviews', \App\Livewire\Reviews\Index::class)->name('reviews.index');
+    Route::get('/admin/orders', \App\Livewire\AdminOrders::class)->name('admin.orders.index');
+    Route::get('/carrinho', \App\Livewire\CartComponent::class)->name('cart.index');
+    Route::post('/checkout/process', [\App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout/success', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/cancel', [\App\Http\Controllers\CheckoutController::class, 'cancel'])->name('checkout.cancel');
 });

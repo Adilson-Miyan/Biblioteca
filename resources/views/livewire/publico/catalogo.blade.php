@@ -8,22 +8,6 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <!-- Fixed Toast Notifications (High Z-Index) -->
-            <div class="fixed top-4 right-4 z-[9999] space-y-2">
-                @if (session()->has('success'))
-                    <div class="bg-green-900 border border-green-500 text-green-300 px-6 py-4 rounded-lg shadow-2xl flex items-center gap-3">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                        <span class="font-bold">{{ session('success') }}</span>
-                    </div>
-                @endif
-                @if (session()->has('error'))
-                    <div class="bg-red-900 border border-red-500 text-red-300 px-6 py-4 rounded-lg shadow-2xl flex items-center gap-3">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        <span class="font-bold">{{ session('error') }}</span>
-                    </div>
-                @endif
-            </div>
-
             <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
                 <div>
                     <h2 class="text-3xl font-serif font-bold text-[#cba77d] tracking-wide drop-shadow-md">Obras Disponíveis</h2>
@@ -104,7 +88,7 @@
                         @endif
                     </div>
                     
-                    <div class="mt-2">
+                    <div class="mt-2 space-y-3">
                         @auth
                             @if($livroSelecionado->isDisponivel())
                                 <button wire:click="requisitar({{ $livroSelecionado->id }})" class="w-full bg-[#b58f5c] hover:bg-[#cba77d] text-[#1c1816] py-3 rounded-xl font-bold tracking-wide transition-colors uppercase text-sm">
@@ -118,16 +102,21 @@
                                     Notificar-me quando disponível
                                 </button>
                             @endif
+                            
+                            <button wire:click="adicionarAoCarrinho({{ $livroSelecionado->id }})" class="w-full bg-green-700 hover:bg-green-600 text-white py-3 rounded-xl font-bold tracking-wide transition-colors uppercase text-sm flex items-center justify-center gap-2">
+                                <svg width="18" height="18" class="shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                Adicionar ao carrinho ({{ number_format($livroSelecionado->preco ?? 0, 2, ',', '.') }} €)
+                            </button>
                         @else
                             <a href="{{ route('login') }}" class="block text-center w-full bg-[#1c1816] border border-[#3e2b1e] hover:border-[#b58f5c] text-white py-3 rounded-xl tracking-wide transition-colors uppercase text-sm font-bold">
-                                Login para Requisitar
+                                Login para Requisitar ou Comprar
                             </a>
                         @endauth
                     </div>
                 </div>
 
                 <!-- Right side: Info & History -->
-                <div class="col-span-1 md:col-span-2 space-y-6">
+                <div class="col-span-1 md:col-span-2 space-y-4">
                     <div>
                         <h2 class="text-3xl font-serif font-bold text-white leading-tight mb-2">{{ $livroSelecionado->nome }}</h2>
                         <p class="text-lg text-[#b58f5c] font-medium">{{ $livroSelecionado->autores->pluck('nome')->implode(', ') }}</p>
@@ -145,9 +134,9 @@
 
                     <!-- Histórico de Requisições -->
                     <div>
-                        <h3 class="text-sm font-bold text-[#cba77d] uppercase tracking-wide mb-3 flex items-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Histórico de Requisições
+                        <h3 class="text-sm font-bold text-[#cba77d] uppercase tracking-wide mb-2 flex items-center gap-2">
+                            <svg width="16" height="16" class="inline-block shrink-0 text-[#b58f5c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>Histórico de Requisições</span>
                         </h3>
                         
                         @php
@@ -208,10 +197,10 @@
                     </div>
 
                     <!-- Avaliações -->
-                    <div class="mt-8">
-                        <h3 class="text-sm font-bold text-[#cba77d] uppercase tracking-wide mb-3 flex items-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
-                            Avaliações
+                    <div class="mt-4">
+                        <h3 class="text-sm font-bold text-[#cba77d] uppercase tracking-wide mb-2 flex items-center gap-2">
+                            <svg width="16" height="16" class="inline-block shrink-0 text-[#b58f5c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                            <span>Avaliações</span>
                         </h3>
                         
                         @php

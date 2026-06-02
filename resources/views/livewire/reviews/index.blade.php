@@ -8,12 +8,6 @@
                 </div>
             </div>
 
-            @if (session()->has('success'))
-                <div class="bg-green-900/50 border border-green-500 text-green-300 px-4 py-3 rounded-lg">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <div class="bg-[#2d2019] overflow-hidden shadow-2xl rounded-3xl p-6 border border-[#3e2b1e]">
                 
                 <div class="flex justify-between items-center mb-6">

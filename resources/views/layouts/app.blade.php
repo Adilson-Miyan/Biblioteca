@@ -13,6 +13,33 @@
     </head>
     <body class="font-sans antialiased">
         <x-banner />
+        <div class="fixed inset-x-0 top-4 z-[10000] pointer-events-none px-4">
+            <div class="mx-auto max-w-3xl space-y-2">
+                @if (session()->has('success'))
+                    <div
+                        x-data="{ show: true }"
+                        x-init="setTimeout(() => show = false, 4500)"
+                        x-show="show"
+                        x-transition.opacity.duration.300ms
+                        class="pointer-events-auto rounded-xl border border-green-500/70 bg-green-900/95 px-4 py-3 text-green-100 shadow-2xl"
+                    >
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                @if (session()->has('error'))
+                    <div
+                        x-data="{ show: true }"
+                        x-init="setTimeout(() => show = false, 5500)"
+                        x-show="show"
+                        x-transition.opacity.duration.300ms
+                        class="pointer-events-auto rounded-xl border border-red-500/70 bg-red-900/95 px-4 py-3 text-red-100 shadow-2xl"
+                    >
+                        {{ session('error') }}
+                    </div>
+                @endif
+            </div>
+        </div>
 
         <div class="min-h-screen flex flex-col bg-[#1c1816] text-white selection:bg-[#b58f5c] selection:text-[#1c1816]">
             @livewire('navigation-menu')

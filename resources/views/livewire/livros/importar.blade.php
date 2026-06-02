@@ -15,20 +15,6 @@
                 </div>
             </div>
 
-            @if (session()->has('success'))
-                <div class="alert alert-success bg-green-900/50 border border-green-500 text-green-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    <span>{{ session('success') }}</span>
-                </div>
-            @endif
-
-            @if (session()->has('error'))
-                <div class="alert alert-error bg-red-900/50 border border-red-500 text-red-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    <span>{{ session('error') }}</span>
-                </div>
-            @endif
-
             <div class="bg-[#2d2019] shadow-2xl rounded-3xl p-6 border border-[#3e2b1e]">
                 <form wire:submit.prevent="searchBooks" class="flex flex-col sm:flex-row gap-4 mb-6">
                     <input type="text" wire:model="searchQuery" placeholder="Insira o título, autor ou ISBN..." class="input input-bordered flex-1 bg-[#1c1816] border-[#3e2b1e] text-white focus:border-[#b58f5c] focus:ring-[#b58f5c]" required>

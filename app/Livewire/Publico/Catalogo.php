@@ -117,6 +117,34 @@ class Catalogo extends Component
         }
     }
 
+    public function adicionarAoCarrinho($livroId)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+        
+        $livro = Livro::findOrFail($livroId);
+
+        $cart = \App\Models\Cart::resolveActiveForUser($user->id);
+
+        // Check if book is already in cart
+        if ($cart->items()->where('livro_id', $livro->id)->exists()) {
+            session()->flash('error', 'Este livro já se encontra no seu carrinho.');
+            return;
+        }
+
+        $cart->items()->create(['livro_id' => $livro->id]);
+        $cart->touch();
+
+        $this->dispatch('cartUpdated');
+        
+        $this->showModal = false;
+
+        session()->flash('success', 'Livro adicionado ao carrinho com sucesso!');
+    }
+
     public function render()
     {
         $todosLivros = Livro::with('editora', 'autores')->get();

@@ -32,6 +32,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'delivery_address',
     ];
 
     /**
@@ -81,5 +82,15 @@ class User extends Authenticatable
     public function requisicaos()
     {
         return $this->hasMany(Requisicao::class);
+    }
+
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }
