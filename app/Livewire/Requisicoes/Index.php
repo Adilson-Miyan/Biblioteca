@@ -59,6 +59,8 @@ class Index extends Component
         $this->confirmingRececao = false;
         $this->requisicaoIdToConfirm = null;
         
+        \App\Services\LogService::register('Requisições', "Confirmou a devolução/receção da requisição #{$requisicao->id}", $requisicao->id);
+
         session()->flash('success', 'Receção confirmada com sucesso.');
     }
 

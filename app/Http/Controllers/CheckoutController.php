@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Checkout\Session as StripeSession;
 use Stripe\Stripe;
+use App\Services\LogService;
 
 class CheckoutController extends Controller
 {
@@ -126,6 +127,8 @@ class CheckoutController extends Controller
             }
 
             $order->update(['status' => 'paga']);
+
+            LogService::register('Encomendas', "Efetou o pagamento da encomenda #{$order->id} no valor de {$order->total}€", $order->id);
 
             $cart = Cart::where('user_id', Auth::id())->where('status', 'active')->first();
             if ($cart) {

@@ -12,6 +12,7 @@ use App\Mail\RequisicaoCriada;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Services\LogService;
 
 class Catalogo extends Component
 {
@@ -68,6 +69,8 @@ class Catalogo extends Component
             Mail::to($admin->email)->send(new RequisicaoCriada($requisicao, forAdmin: true));
         }
         Mail::to($user->email)->send(new RequisicaoCriada($requisicao, forAdmin: false));
+
+        LogService::register('Requisições', "Requisitou o livro: {$livro->nome}", $livro->id);
 
         session()->flash('success', 'Requisição efetuada com sucesso!');
     }
@@ -137,6 +140,8 @@ class Catalogo extends Component
 
         $cart->items()->create(['livro_id' => $livro->id]);
         $cart->touch();
+
+        LogService::register('Carrinho', "Adicionou ao carrinho o livro: {$livro->nome}", $livro->id);
 
         $this->dispatch('cartUpdated');
         
