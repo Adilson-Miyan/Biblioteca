@@ -17,6 +17,9 @@
                         Catálogo
                     </x-nav-link>
                     @auth
+                        <x-nav-link href="{{ route('chat.index') }}" :active="request()->routeIs('chat.index')">
+                            Campfire Chat
+                        </x-nav-link>
                         <x-nav-link href="{{ route('requisicoes.index') }}" :active="request()->routeIs('requisicoes.*')">
                             {{ __('Requisições') }}
                         </x-nav-link>
@@ -36,7 +39,7 @@
                                         <x-dropdown-link href="{{ route('livros.index') }}">Livros</x-dropdown-link>
                                         <x-dropdown-link href="{{ route('autores.index') }}">Autores</x-dropdown-link>
                                         <x-dropdown-link href="{{ route('editoras.index') }}">Editoras</x-dropdown-link>
-                                        <x-dropdown-link href="{{ route('cidadaos.index') }}">Cidadãos</x-dropdown-link>
+                                        <x-dropdown-link href="{{ route('admin.users.index') }}">Equipa & Utilizadores</x-dropdown-link>
                                         <div class="border-t border-gray-700/50"></div>
                                         <x-dropdown-link href="{{ route('reviews.index') }}">Avaliações</x-dropdown-link>
                                         <x-dropdown-link href="{{ route('admin.orders.index') }}">Encomendas</x-dropdown-link>
@@ -174,6 +177,9 @@
                 Catálogo
             </x-responsive-nav-link>
             @auth
+                <x-responsive-nav-link href="{{ route('chat.index') }}" :active="request()->routeIs('chat.index')">
+                    Campfire Chat
+                </x-responsive-nav-link>
                 @if(Auth::user()->isAdmin())
                     <x-responsive-nav-link href="{{ route('livros.index') }}" :active="request()->routeIs('livros.*')">
                         Livros
@@ -184,8 +190,8 @@
                     <x-responsive-nav-link href="{{ route('editoras.index') }}" :active="request()->routeIs('editoras.*')">
                         Editoras
                     </x-responsive-nav-link>
-                    <x-responsive-nav-link href="{{ route('cidadaos.index') }}" :active="request()->routeIs('cidadaos.*')">
-                        Cidadãos
+                    <x-responsive-nav-link href="{{ route('admin.users.index') }}" :active="request()->routeIs('admin.users.*')">
+                        Equipa & Utilizadores
                     </x-responsive-nav-link>
                 @endif
                 <x-responsive-nav-link href="{{ route('requisicoes.index') }}" :active="request()->routeIs('requisicoes.*')">

@@ -32,8 +32,10 @@ Route::middleware([
     Route::get('/reviews', \App\Livewire\Reviews\Index::class)->name('reviews.index');
     Route::get('/admin/orders', \App\Livewire\AdminOrders::class)->name('admin.orders.index');
     Route::get('/admin/logs', \App\Livewire\AdminLogs::class)->name('admin.logs.index');
+    Route::get('/admin/users', \App\Livewire\AdminUsers::class)->name('admin.users.index');
     Route::get('/carrinho', \App\Livewire\CartComponent::class)->name('cart.index');
     Route::post('/checkout/process', [\App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
     Route::get('/checkout/success', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/chat', \App\Livewire\Chat::class)->name('chat.index');
     Route::get('/checkout/cancel', [\App\Http\Controllers\CheckoutController::class, 'cancel'])->name('checkout.cancel');
 });

@@ -33,6 +33,7 @@ class User extends Authenticatable
         'password',
         'role',
         'delivery_address',
+        'last_seen_at',
     ];
 
     /**
@@ -66,6 +67,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_seen_at' => 'datetime',
         ];
     }
 
@@ -92,5 +94,20 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function isOnline()
+    {
+        return $this->last_seen_at && $this->last_seen_at->gt(now()->subMinutes(5));
     }
 }
